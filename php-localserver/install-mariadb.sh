@@ -3,13 +3,33 @@
 echo "🚀 Instalação - MariaDB"
 echo ""
 
+# Verificar se o script foi chamado com o parâmetro --apt ou -a para forçar o uso do APT
+FORCE_APT=false
+for arg in "$@"; do
+    if [[ "$arg" == "--apt" || "$arg" == "-a" ]]; then
+        FORCE_APT=true
+        break
+    fi
+done
+
+# Definir o gerenciador de pacotes
+if $FORCE_APT; then
+    PACKAGE_MANAGER="apt"
+elif command -v nala &> /dev/null; then
+    PACKAGE_MANAGER="nala"
+else
+    PACKAGE_MANAGER="apt"
+fi
+
 # Função para gerar uma senha forte (caso o usuário não queira criar uma manualmente)
 generate_password() {
     < /dev/urandom tr -dc 'A-Za-z0-9_@#$%^&+=!' | head -c 16
 }
 
 # Solicitar senha para o usuário 'admin'
-echo "🔐 Por favor, insira a senha para o usuário 'admin':"
+echo "🔐 Senha do usuário 'admin'"
+wcho "Deixe em branco para gerar automaticamente"
+echo "Insira a senha':"
 read -s ADMIN_PASSWORD
 
 # Verificar se o usuário forneceu a senha
@@ -35,15 +55,15 @@ fi
 
 # Instalar dependências necessárias
 echo "⚙️ Instalando dependências..."
-sudo nala install wget software-properties-common dirmngr ca-certificates apt-transport-https -y
+sudo $PACKAGE_MANAGER install wget software-properties-common dirmngr ca-certificates apt-transport-https -y
 
 # Atualizar pacotes
 echo "🔄 Atualizando pacotes..."
-sudo nala update && sudo nala upgrade -y
+sudo $PACKAGE_MANAGER update && sudo $PACKAGE_MANAGER upgrade -y
 
 # Instalar MariaDB
 echo "📥 Instalando MariaDB..."
-sudo nala install mariadb-server -y
+sudo $PACKAGE_MANAGER install mariadb-server -y
 
 # Iniciar o serviço MariaDB
 echo "🚀 Iniciando o serviço MariaDB..."
