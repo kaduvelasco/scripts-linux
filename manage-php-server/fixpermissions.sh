@@ -12,12 +12,12 @@ apply_changes() {
 
     # Verificar se a pasta existe antes de aplicar as mudanças
     if [ -d "$folder" ]; then
-        echo -e "\e[33m🔄 Ajustando propriedade da pasta $folder para $USER...\e[0m"
-        sudo chown -R $USER:$USER "$folder"
+        echo -e "\e[33m🔄 Ajustando propriedade da pasta $folder para www-data:www-data...\e[0m"
+        sudo chown -R www-data:www-data "$folder"
         echo -e "\e[32m✅ Propriedade ajustada com sucesso!\e[0m"
 
         echo -e "\e[33m🔄 Aplicando permissões 775 na pasta $folder...\e[0m"
-        sudo chmod -R 775 "$folder"
+        sudo chmod -R 777 "$folder"
         echo -e "\e[32m✅ Permissões aplicadas com sucesso!\e[0m"
     else
         echo -e "\e[31m❌ A pasta $folder não existe.\e[0m"

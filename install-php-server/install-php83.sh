@@ -84,9 +84,13 @@ sudo apachectl configtest
 echo "⚙️ Ajustando configurações do PHP-FPM..."
 sudo sed -i 's/;security.limit_extensions = .php/security.limit_extensions = .php/' /etc/php/8.3/fpm/pool.d/www.conf
 
-# Baixa o arquivo php83.ini do repositório GitHub e substitui o existente
-echo "⬇️ Baixando e substituindo o php.ini..."
-curl -o /etc/php/8.3/fpm/php.ini https://github.com/kaduvelasco/scripts-linux/raw/main/php-ini/php83.ini
+# Configurações do php.ini
+# Obtém o diretório onde o script está localizado
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Copia o php83.ini local para o diretório correto
+echo "📄 Copiando php83.ini local..."
+sudo cp "$SCRIPT_DIR/php-ini/php83.ini" /etc/php/8.3/fpm/php.ini
 
 # Reinicia o PHP-FPM
 echo "🔄 Reiniciando PHP-FPM..."
